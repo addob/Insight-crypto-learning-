@@ -1,7 +1,48 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { getStripe } from "@/lib/stripe";
+import { getStripe, getSubscriptionPeriodEnd } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
+
+/** Statuses under which the subscriber should NOT have active access. */
+const INACTIVE_SUBSCRIPTION_STATUSES: Stripe.Subscription.Status[] = [
+  "canceled",
+  "incomplete_expired",
+  "unpaid",
+];
+
+async function syncSubscriptionAccess(subscription: Stripe.Subscription) {
+  const userId = subscription.metadata?.userId;
+  if (!userId) return;
+
+  const revoke = INACTIVE_SUBSCRIPTION_STATUSES.includes(subscription.status);
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      plan: "monthly",
+      stripeSubId: subscription.id,
+      accessUntil: revoke ? new Date() : getSubscriptionPeriodEnd(subscription),
+    },
+  });
+}
+
+async function fulfilCheckoutSession(stripe: Stripe, checkoutSession: Stripe.Checkout.Session) {
+  const userId = checkoutSession.metadata?.userId;
+  const plan = checkoutSession.metadata?.plan;
+  if (!userId) return;
+
+  if (plan === "onetime") {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { hasLifetime: true, plan: "onetime" },
+    });
+  } else if (plan === "monthly" && checkoutSession.subscription) {
+    const subscription = await stripe.subscriptions.retrieve(
+      checkoutSession.subscription as string
+    );
+    await syncSubscriptionAccess(subscription);
+  }
+}
 
 export async function POST(req: Request) {
   const stripe = getStripe();
@@ -23,50 +64,60 @@ export async function POST(req: Request) {
   }
 
   switch (event.type) {
+    // Fulfil on synchronous success. For delayed-notification payment
+    // methods, `completed` can fire while `payment_status` is still
+    // "unpaid" — fulfilment for those happens on async_payment_succeeded
+    // instead, so we don't grant access for a payment that may still fail.
     case "checkout.session.completed": {
       const checkoutSession = event.data.object as Stripe.Checkout.Session;
-      const userId = checkoutSession.metadata?.userId;
-      const plan = checkoutSession.metadata?.plan;
-      if (!userId) break;
-
-      if (plan === "onetime") {
-        await prisma.user.update({
-          where: { id: userId },
-          data: { hasLifetime: true, plan: "onetime" },
-        });
-      } else if (plan === "monthly" && checkoutSession.subscription) {
-        const subscription = await stripe.subscriptions.retrieve(
-          checkoutSession.subscription as string
-        );
-        await prisma.user.update({
-          where: { id: userId },
-          data: {
-            plan: "monthly",
-            stripeSubId: subscription.id,
-            accessUntil: new Date(subscription.current_period_end * 1000),
-          },
-        });
-      }
+      if (checkoutSession.payment_status === "unpaid") break;
+      await fulfilCheckoutSession(stripe, checkoutSession);
       break;
     }
 
+    // Delayed-notification payment method (e.g. bank debit) has now
+    // actually cleared — fulfil here since `completed` deliberately
+    // skipped it above.
+    case "checkout.session.async_payment_succeeded": {
+      const checkoutSession = event.data.object as Stripe.Checkout.Session;
+      await fulfilCheckoutSession(stripe, checkoutSession);
+      break;
+    }
+
+    // Delayed-notification payment ultimately failed. No access was
+    // granted (we never fulfilled on the unpaid `completed` event), so
+    // there's nothing to revoke — handled explicitly rather than falling
+    // through to `default` so this isn't silently dropped.
+    case "checkout.session.async_payment_failed":
+      break;
+
     case "invoice.paid": {
       const invoice = event.data.object as Stripe.Invoice;
-      const subscriptionId = invoice.subscription as string | null;
-      if (!subscriptionId) break;
+      const subscriptionRef = invoice.parent?.subscription_details?.subscription;
+      if (!subscriptionRef) break;
 
+      const subscriptionId =
+        typeof subscriptionRef === "string" ? subscriptionRef : subscriptionRef.id;
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-      const userId = subscription.metadata?.userId;
-      if (!userId) break;
+      await syncSubscriptionAccess(subscription);
+      break;
+    }
 
-      await prisma.user.update({
-        where: { id: userId },
-        data: {
-          plan: "monthly",
-          stripeSubId: subscription.id,
-          accessUntil: new Date(subscription.current_period_end * 1000),
-        },
-      });
+    // A renewal failed. Stripe will automatically retry per the
+    // subscription's dunning configuration; we deliberately don't revoke
+    // access here — `accessUntil` was only ever extended by a *successful*
+    // invoice.paid, so it will naturally lapse if retries keep failing.
+    // Handled explicitly (rather than via `default`) as a hook for adding
+    // a "payment failed, please update your card" email later.
+    case "invoice.payment_failed":
+      break;
+
+    // Catches plan changes, reactivations, and status transitions
+    // (e.g. trialing -> active, or -> past_due/unpaid) that aren't
+    // necessarily accompanied by an invoice event.
+    case "customer.subscription.updated": {
+      const subscription = event.data.object as Stripe.Subscription;
+      await syncSubscriptionAccess(subscription);
       break;
     }
 

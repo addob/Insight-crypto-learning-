@@ -2,11 +2,15 @@ import Stripe from "stripe";
 
 let stripeClient: Stripe | null = null;
 
+// Keep in sync with the Stripe API version this integration was built and
+// tested against. Bump deliberately, not automatically.
+const STRIPE_API_VERSION = "2026-08-26.dahlia" satisfies Stripe.LatestApiVersion;
+
 export function getStripe(): Stripe | null {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return null;
   if (!stripeClient) {
-    stripeClient = new Stripe(key, { apiVersion: "2024-06-20" });
+    stripeClient = new Stripe(key, { apiVersion: STRIPE_API_VERSION });
   }
   return stripeClient;
 }
@@ -17,3 +21,29 @@ export const isStripeConfigured = () =>
       process.env.STRIPE_PRICE_MONTHLY &&
       process.env.STRIPE_PRICE_ONETIME
   );
+
+/**
+ * As of newer Stripe API versions, `current_period_end` lives on each
+ * subscription item (not the subscription itself), since a subscription can
+ * hold multiple prices with independent billing cycles. This integration
+ * only ever attaches a single price per subscription, so take the latest
+ * period end across items.
+ */
+export function getSubscriptionPeriodEnd(subscription: Stripe.Subscription): Date {
+  const ends = subscription.items.data.map((item) => item.current_period_end);
+  return new Date(Math.max(...ends) * 1000);
+}
+
+/**
+ * Stripe recommends tagging Checkout Sessions with `integration_identifier`
+ * (a stable label + an 8-letter random suffix) so sessions from this
+ * integration are identifiable and comparable in the Dashboard.
+ */
+export function checkoutIntegrationIdentifier(label: string): string {
+  const letters = "abcdefghijklmnopqrstuvwxyz";
+  let suffix = "";
+  for (let i = 0; i < 8; i++) {
+    suffix += letters[Math.floor(Math.random() * letters.length)];
+  }
+  return `${label}-${suffix}`;
+}

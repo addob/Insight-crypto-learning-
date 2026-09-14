@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { computeUnlockedDay, hasActiveAccess, TOTAL_DAYS } from "@/lib/access";
 import CourseRoadmap from "@/components/CourseRoadmap";
+import ManageBillingButton from "@/components/ManageBillingButton";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -62,6 +63,22 @@ export default async function DashboardPage() {
           <Link href="/pricing" className="btn-primary whitespace-nowrap">
             View plans
           </Link>
+        </div>
+      )}
+
+      {access && user.stripeCustomerId && (
+        <div className="card mb-10 flex flex-col items-start gap-4 p-6 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="font-semibold">
+              {user.hasLifetime ? "Lifetime access — all set." : "Monthly plan active."}
+            </p>
+            <p className="mt-1 text-sm text-muted">
+              {user.hasLifetime
+                ? "You paid once and keep access — nothing to manage."
+                : "Update your payment method, view invoices, or cancel anytime."}
+            </p>
+          </div>
+          {!user.hasLifetime && <ManageBillingButton />}
         </div>
       )}
 

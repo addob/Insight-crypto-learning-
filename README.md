@@ -43,22 +43,55 @@ questions, 4 unique options, and a valid correct-answer index.
 
 ### 1. Stripe (payments)
 
-1. Create a [Stripe](https://dashboard.stripe.com) account and switch to
-   **live mode** when ready.
-2. Create two Products in the Stripe Dashboard:
+1. Create a [Stripe](https://dashboard.stripe.com) account. Build and test
+   everything in **test mode** first (test-mode keys start `sk_test_...` /
+   `rk_test_...`); switch to live mode only when you're ready to take real
+   payments.
+2. Create two Products in the Stripe Dashboard (each product must be
+   separate — don't put two prices for two different plans on one product,
+   or Checkout/invoices won't be able to tell them apart):
    - "Insight Crypto Learning — Monthly" — recurring price, **£5.00/month**
    - "Insight Crypto Learning — Lifetime" — one-time price, **£50.00**
 3. Copy the two **Price IDs** into `STRIPE_PRICE_MONTHLY` and
    `STRIPE_PRICE_ONETIME`.
-4. Copy your **Secret key** into `STRIPE_SECRET_KEY`.
+4. Create a **restricted API key** (Developers → API keys → Create
+   restricted key) scoped to only what this app needs — Checkout Sessions,
+   Customers, Subscriptions, Billing Portal, and Webhooks, all write access;
+   everything else off. Use this (`rk_...`) as `STRIPE_SECRET_KEY` instead
+   of the full account secret key (`sk_...`) — a leaked restricted key can
+   do far less damage. Store it in your host's secrets vault (see below),
+   never committed to source control.
 5. Add a webhook endpoint pointing at
    `https://insightcryptolearning.com/api/stripe/webhook`, subscribed to:
-   `checkout.session.completed`, `invoice.paid`,
+   `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
+   `checkout.session.async_payment_failed`, `invoice.paid`,
+   `invoice.payment_failed`, `customer.subscription.updated`, and
    `customer.subscription.deleted`. Copy the signing secret into
    `STRIPE_WEBHOOK_SECRET`.
+6. Enable the **Customer Portal** (Settings → Billing → Customer portal) so
+   the "Manage billing" button on the student dashboard works — it lets
+   subscribers cancel, update their card, and see invoices without you
+   building that UI.
 
 Without these, the site still runs — the "Enrol now" buttons simply show a
 message that payments aren't configured yet.
+
+**Secrets storage:** don't leave live keys sitting only in `.env` on a
+server. On Vercel, mark them as
+[sensitive environment variables](https://vercel.com/docs/environment-variables/sensitive-environment-variables)
+so they're write-only in the dashboard; on AWS/GCP/Azure, use Secrets
+Manager / Secret Manager / Key Vault instead of plain env vars where
+possible.
+
+**Tax:** this is a recurring UK subscription business, so once you have
+real customers you'll likely need to charge VAT (UK/EU) or local sales tax
+depending on where students are. Stripe Tax can calculate and collect this
+automatically inside Checkout (`automatic_tax: { enabled: true }`), but it
+only starts collecting once you've added an active tax registration for
+each relevant jurisdiction in the Dashboard — enabling the flag alone
+collects nothing and fails silently. This isn't wired up yet; see
+[Collect taxes for recurring payments](https://docs.stripe.com/billing/taxes/collect-taxes.md)
+before launch.
 
 ### 2. Database (production)
 

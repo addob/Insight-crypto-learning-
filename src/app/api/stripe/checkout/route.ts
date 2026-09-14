@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { getStripe, isStripeConfigured } from "@/lib/stripe";
+import { checkoutIntegrationIdentifier, getStripe, isStripeConfigured } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
@@ -52,12 +52,17 @@ export async function POST(req: Request) {
   const checkoutSession = await stripe.checkout.sessions.create({
     mode: plan === "onetime" ? "payment" : "subscription",
     customer: customerId,
+    // Deliberately omitted: payment_method_types. Leaving this unset lets
+    // Stripe dynamically show the most relevant payment methods per
+    // customer (configured from the Dashboard) rather than locking the
+    // integration to cards only.
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${siteUrl}/dashboard?checkout=success`,
     cancel_url: `${siteUrl}/pricing?checkout=cancelled`,
     metadata: { userId: user.id, plan },
     subscription_data:
       plan === "monthly" ? { metadata: { userId: user.id, plan } } : undefined,
+    integration_identifier: checkoutIntegrationIdentifier("insight-crypto-learning"),
   });
 
   return NextResponse.json({ url: checkoutSession.url });

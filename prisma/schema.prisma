@@ -1,10 +1,11 @@
 // Prisma schema for Insight Crypto Learning
-// Dev default: SQLite (zero-config). For production on Vercel/serverless,
-// switch provider to "postgresql" and point DATABASE_URL at a hosted
-// Postgres instance (e.g. Neon, Supabase, Vercel Postgres) — see README.
+// Postgres everywhere — SQLite doesn't survive Vercel's ephemeral
+// serverless filesystem, so both dev and prod point at a real Postgres
+// instance (e.g. Neon, Supabase, Vercel Postgres) via DATABASE_URL. See
+// README for how to provision one for local development.
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

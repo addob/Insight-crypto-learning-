@@ -23,12 +23,13 @@ Needs a Postgres database — SQLite isn't used anywhere in this project
 because it doesn't survive Vercel's serverless filesystem. Easiest option
 for local dev: a free [Neon](https://neon.tech) or
 [Supabase](https://supabase.com) project takes under a minute to create and
-gives you a `DATABASE_URL` immediately; a local Postgres via Docker works
-too.
+gives you a connection string immediately; a local Postgres via Docker
+works too. Name the env var `POSTGRES_URL` (not `DATABASE_URL`) — see the
+comment in `prisma/schema.prisma` for why.
 
 ```bash
 npm install
-cp .env.example .env   # then fill in DATABASE_URL (Stripe keys optional at first)
+cp .env.example .env   # then fill in POSTGRES_URL (Stripe keys optional at first)
 npx prisma db push     # creates the User/Progress tables
 npm run dev            # http://localhost:3000
 ```
@@ -103,9 +104,14 @@ before launch.
 
 Provision a Postgres database for production the same way as local dev —
 Neon, Supabase, and Vercel's own Postgres marketplace integration all work
-and take a couple of minutes. Point `DATABASE_URL` at it and run
-`npx prisma db push` (or `prisma migrate deploy` in CI) against it once
-before first use — Vercel's build step does not do this automatically.
+and take a couple of minutes. Point `POSTGRES_URL` at it (if using Vercel's
+"Prisma Postgres" storage integration specifically, it creates this
+variable for you automatically alongside `DATABASE_URL`/
+`PRISMA_DATABASE_URL` — use `POSTGRES_URL`, the plain connection string;
+the other two are Accelerate proxy URLs this app's plain PrismaClient can't
+use) and run `npx prisma db push` (or `prisma migrate deploy` in CI)
+against it once before first use — Vercel's build step does not do this
+automatically.
 
 ### 3. Domain & environment variables
 
@@ -114,7 +120,7 @@ Set these in your hosting provider (e.g. Vercel project settings) and point
 
 | Variable | Purpose |
 |---|---|
-| `DATABASE_URL` | Postgres connection string |
+| `POSTGRES_URL` | Postgres connection string (must be this exact name — see above) |
 | `NEXTAUTH_SECRET` | Random secret — generate with `openssl rand -base64 32` |
 | `NEXTAUTH_URL` | `https://insightcryptolearning.com` |
 | `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | From Stripe |
@@ -127,17 +133,23 @@ Set these in your hosting provider (e.g. Vercel project settings) and point
 
 1. Go to [vercel.com](https://vercel.com), sign in, and **Add New → Project**,
    then import the `addob/Insight-crypto-learning-` GitHub repo.
-2. Under **Storage**, add a Postgres database (Vercel's Neon/Supabase
-   marketplace integration is the fastest path) — this sets `DATABASE_URL`
-   for you automatically.
+2. Under **Storage**, add a Postgres database. If you use Vercel's "Prisma
+   Postgres" integration, it creates `POSTGRES_URL`, `DATABASE_URL`, and
+   `PRISMA_DATABASE_URL` — this app is configured to read `POSTGRES_URL`
+   specifically (the plain connection string); leave the other two alone.
 3. In **Settings → Environment Variables**, add the rest of the table
    above. Generate a fresh `NEXTAUTH_SECRET` for production — don't reuse
    a value from local `.env`.
 4. Deploy. Once it's live, set `NEXTAUTH_URL` and `NEXT_PUBLIC_SITE_URL` to
    the real deployment URL (or your custom domain once attached) and
    redeploy — these can't be known before the first deploy gives you a URL.
-5. Run `npx prisma db push` once against the production `DATABASE_URL`
-   (from your own machine, with it set in your shell) to create the tables.
+5. Create the database tables once: if `POSTGRES_URL` is marked as a
+   sensitive/secret variable you can't view, running `npx prisma db push`
+   from your own machine isn't possible (you can't get the connection
+   string out to use it). Instead, open the database's own console/Studio
+   (from the Storage integration, or console.prisma.io) and run the SQL
+   from `npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script`
+   there directly.
 6. Only now can the Stripe webhook be registered — it needs a real,
    internet-reachable URL. Go back to Stripe (Developers → Webhooks →
    Add endpoint), point it at `https://<your-domain>/api/stripe/webhook`

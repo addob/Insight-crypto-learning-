@@ -1,12 +1,19 @@
 // Prisma schema for Insight Crypto Learning
 // Postgres everywhere — SQLite doesn't survive Vercel's ephemeral
 // serverless filesystem, so both dev and prod point at a real Postgres
-// instance (e.g. Neon, Supabase, Vercel Postgres) via DATABASE_URL. See
-// README for how to provision one for local development.
+// instance via POSTGRES_URL. Deliberately POSTGRES_URL, not DATABASE_URL:
+// Vercel's "Prisma Postgres" storage integration sets DATABASE_URL (and
+// PRISMA_DATABASE_URL) to a prisma+postgres:// Accelerate connection
+// string, which only works with the @prisma/extension-accelerate client
+// extension — not installed here. POSTGRES_URL is the plain postgres://
+// connection string the same integration provides, compatible with a
+// standard PrismaClient. If provisioning Postgres elsewhere (Neon,
+// Supabase, local), name the connection string env var POSTGRES_URL to
+// match. See README for local setup.
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("POSTGRES_URL")
 }
 
 generator client {

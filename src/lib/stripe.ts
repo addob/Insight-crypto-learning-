@@ -10,7 +10,15 @@ export function getStripe(): Stripe | null {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return null;
   if (!stripeClient) {
-    stripeClient = new Stripe(key, { apiVersion: STRIPE_API_VERSION });
+    stripeClient = new Stripe(key, {
+      apiVersion: STRIPE_API_VERSION,
+      // Stripe's SDK defaults to a fetch-based HTTP client, which has been
+      // observed to fail immediately with "connection error" in some
+      // serverless bundling setups (Vercel/Next.js included) despite no
+      // real network issue. Forcing the classic Node https client avoids
+      // this — see https://github.com/stripe/stripe-node/issues/2286.
+      httpClient: Stripe.createNodeHttpClient(),
+    });
   }
   return stripeClient;
 }

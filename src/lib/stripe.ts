@@ -7,7 +7,12 @@ let stripeClient: Stripe | null = null;
 const STRIPE_API_VERSION = "2026-08-26.dahlia" satisfies Stripe.LatestApiVersion;
 
 export function getStripe(): Stripe | null {
-  const key = process.env.STRIPE_SECRET_KEY;
+  // .trim() defends against a stray trailing newline/space in the env var
+  // value (e.g. from a copy-paste into a dashboard field) — Node's http
+  // module rejects such characters in header values outright, which
+  // surfaces confusingly as a StripeConnectionError with no real network
+  // attempt ever made, rather than an obviously-key-related error.
+  const key = process.env.STRIPE_SECRET_KEY?.trim();
   if (!key) return null;
   if (!stripeClient) {
     stripeClient = new Stripe(key, {

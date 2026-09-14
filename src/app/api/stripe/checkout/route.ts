@@ -1,8 +1,22 @@
 import { NextResponse } from "next/server";
+import type Stripe from "stripe";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { checkoutIntegrationIdentifier, getStripe, isStripeConfigured } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
+
+function logStripeError(context: string, err: unknown) {
+  const e = err as (Stripe.errors.StripeError & { detail?: unknown }) | undefined;
+  console.error(`[stripe:${context}]`, {
+    message: e?.message,
+    type: e?.type,
+    code: e?.code,
+    detail:
+      e?.detail instanceof Error
+        ? { name: e.detail.name, message: e.detail.message, code: (e.detail as NodeJS.ErrnoException).code, errno: (e.detail as NodeJS.ErrnoException).errno, syscall: (e.detail as NodeJS.ErrnoException).syscall, address: (e.detail as NodeJS.ErrnoException & { address?: string }).address, stack: e.detail.stack }
+        : e?.detail,
+  });
+}
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -33,37 +47,52 @@ export async function POST(req: Request) {
   }
 
   let customerId = user.stripeCustomerId ?? undefined;
-  if (!customerId) {
-    const customer = await stripe.customers.create({
-      email: user.email,
-      name: user.name,
-      metadata: { userId: user.id },
+
+  try {
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: user.email,
+        name: user.name,
+        metadata: { userId: user.id },
+      });
+      customerId = customer.id;
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { stripeCustomerId: customerId },
+      });
+    }
+
+    const priceId =
+      plan === "onetime" ? process.env.STRIPE_PRICE_ONETIME : process.env.STRIPE_PRICE_MONTHLY;
+
+    const checkoutSession = await stripe.checkout.sessions.create({
+      mode: plan === "onetime" ? "payment" : "subscription",
+      customer: customerId,
+      // Deliberately omitted: payment_method_types. Leaving this unset lets
+      // Stripe dynamically show the most relevant payment methods per
+      // customer (configured from the Dashboard) rather than locking the
+      // integration to cards only.
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: `${siteUrl}/dashboard?checkout=success`,
+      cancel_url: `${siteUrl}/pricing?checkout=cancelled`,
+      metadata: { userId: user.id, plan },
+      subscription_data:
+        plan === "monthly" ? { metadata: { userId: user.id, plan } } : undefined,
+      integration_identifier: checkoutIntegrationIdentifier("insight-crypto-learning"),
     });
-    customerId = customer.id;
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { stripeCustomerId: customerId },
-    });
+
+    return NextResponse.json({ url: checkoutSession.url });
+  } catch (err) {
+    logStripeError("checkout", err);
+    const e = err as (Stripe.errors.StripeError & { detail?: unknown }) | undefined;
+    const detailCode =
+      e?.detail instanceof Error ? (e.detail as NodeJS.ErrnoException).code : undefined;
+    return NextResponse.json(
+      {
+        error: "Something went wrong starting checkout. Please try again.",
+        debug: { type: e?.type, code: e?.code, detailCode, message: e?.message },
+      },
+      { status: 500 }
+    );
   }
-
-  const priceId =
-    plan === "onetime" ? process.env.STRIPE_PRICE_ONETIME : process.env.STRIPE_PRICE_MONTHLY;
-
-  const checkoutSession = await stripe.checkout.sessions.create({
-    mode: plan === "onetime" ? "payment" : "subscription",
-    customer: customerId,
-    // Deliberately omitted: payment_method_types. Leaving this unset lets
-    // Stripe dynamically show the most relevant payment methods per
-    // customer (configured from the Dashboard) rather than locking the
-    // integration to cards only.
-    line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${siteUrl}/dashboard?checkout=success`,
-    cancel_url: `${siteUrl}/pricing?checkout=cancelled`,
-    metadata: { userId: user.id, plan },
-    subscription_data:
-      plan === "monthly" ? { metadata: { userId: user.id, plan } } : undefined,
-    integration_identifier: checkoutIntegrationIdentifier("insight-crypto-learning"),
-  });
-
-  return NextResponse.json({ url: checkoutSession.url });
 }

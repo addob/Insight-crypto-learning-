@@ -7,12 +7,15 @@ let stripeClient: Stripe | null = null;
 const STRIPE_API_VERSION = "2026-08-26.dahlia" satisfies Stripe.LatestApiVersion;
 
 export function getStripe(): Stripe | null {
-  // .trim() defends against a stray trailing newline/space in the env var
-  // value (e.g. from a copy-paste into a dashboard field) — Node's http
-  // module rejects such characters in header values outright, which
-  // surfaces confusingly as a StripeConnectionError with no real network
-  // attempt ever made, rather than an obviously-key-related error.
-  const key = process.env.STRIPE_SECRET_KEY?.trim();
+  // Strip anything that isn't a valid Stripe-key character. A stray
+  // embedded newline/space from copy-pasting the value into a dashboard
+  // field (not just leading/trailing — .trim() alone wasn't enough) makes
+  // Node's http module reject the Authorization header outright with
+  // ERR_INVALID_CHAR, before any request is attempted — surfacing
+  // confusingly as a StripeConnectionError with no real network attempt
+  // ever made, rather than an obviously-key-related error. Real Stripe
+  // keys are always [A-Za-z0-9_], so this is safe.
+  const key = process.env.STRIPE_SECRET_KEY?.replace(/[^A-Za-z0-9_]/g, "");
   if (!key) return null;
   if (!stripeClient) {
     stripeClient = new Stripe(key, {

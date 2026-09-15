@@ -99,6 +99,48 @@ export default async function CourseDayPage({ params }: { params: { day: string 
         </ul>
       </div>
 
+      {courseDay.terms && courseDay.terms.length > 0 && (
+        <div className="card mt-6 p-6">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gold">
+            Terms you should know
+          </h2>
+          <dl className="space-y-3 text-sm">
+            {courseDay.terms.map((t, i) => (
+              <div key={i}>
+                <dt className="font-semibold">{t.term}</dt>
+                <dd className="text-muted">{t.definition}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )}
+
+      {courseDay.exercise && (
+        <div className="card mt-6 p-6">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gold">
+            Try it yourself: {courseDay.exercise.title}
+          </h2>
+          <div className="space-y-3 text-sm leading-relaxed text-white/90">
+            {courseDay.exercise.body.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {courseDay.securityNote && (
+        <div className="card mt-6 border-danger/40 bg-danger/5 p-6">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-danger">
+            Security note: {courseDay.securityNote.title}
+          </h2>
+          <div className="space-y-3 text-sm leading-relaxed text-white/90">
+            {courseDay.securityNote.body.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="mt-12">
         <h2 className="mb-1 text-xl font-bold">Day {day} knowledge check</h2>
         <p className="mb-6 text-sm text-muted">
@@ -112,6 +154,23 @@ export default async function CourseDayPage({ params }: { params: { day: string 
         </p>
         <QuizForm day={day} questions={quizForClient} alreadyPassed={Boolean(progress?.passed)} />
       </div>
+
+      {courseDay.homework && courseDay.homework.length > 0 && (
+        <div className="card mt-12 p-6">
+          <h2 className="mb-1 text-sm font-semibold uppercase tracking-wide text-gold">
+            Homework (optional, not graded)
+          </h2>
+          <p className="mb-4 text-sm text-muted">
+            These reflection tasks aren&apos;t marked and don&apos;t affect your progress — they&apos;re
+            here to help the lesson stick. Write your answers wherever suits you.
+          </p>
+          <ol className="list-decimal space-y-3 pl-5 text-sm text-white/90">
+            {courseDay.homework.map((h, i) => (
+              <li key={i}>{h}</li>
+            ))}
+          </ol>
+        </div>
+      )}
 
       <div className="mt-12 flex items-center justify-between border-t border-border pt-6 text-sm">
         {prevHref ? (

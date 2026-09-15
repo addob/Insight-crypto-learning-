@@ -1,22 +1,8 @@
 import { NextResponse } from "next/server";
-import type Stripe from "stripe";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { checkoutIntegrationIdentifier, getStripe, isStripeConfigured } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
-
-function logStripeError(context: string, err: unknown) {
-  const e = err as (Stripe.errors.StripeError & { detail?: unknown }) | undefined;
-  console.error(`[stripe:${context}]`, {
-    message: e?.message,
-    type: e?.type,
-    code: e?.code,
-    detail:
-      e?.detail instanceof Error
-        ? { name: e.detail.name, message: e.detail.message, code: (e.detail as NodeJS.ErrnoException).code, errno: (e.detail as NodeJS.ErrnoException).errno, syscall: (e.detail as NodeJS.ErrnoException).syscall, address: (e.detail as NodeJS.ErrnoException & { address?: string }).address, stack: e.detail.stack }
-        : e?.detail,
-  });
-}
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -83,15 +69,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ url: checkoutSession.url });
   } catch (err) {
-    logStripeError("checkout", err);
-    const e = err as (Stripe.errors.StripeError & { detail?: unknown }) | undefined;
-    const detailCode =
-      e?.detail instanceof Error ? (e.detail as NodeJS.ErrnoException).code : undefined;
+    console.error("[stripe:checkout]", err);
     return NextResponse.json(
-      {
-        error: "Something went wrong starting checkout. Please try again.",
-        debug: { type: e?.type, code: e?.code, detailCode, message: e?.message },
-      },
+      { error: "Something went wrong starting checkout. Please try again." },
       { status: 500 }
     );
   }

@@ -37,10 +37,7 @@ export default function PricingPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        const debugSuffix = data.debug
-          ? ` [${[data.debug.type, data.debug.code, data.debug.detailCode].filter(Boolean).join("/")}]`
-          : "";
-        setError((data.error || "Something went wrong starting checkout.") + debugSuffix);
+        setError(data.error || "Something went wrong starting checkout.");
         setLoadingPlan(null);
         return;
       }

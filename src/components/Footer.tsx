@@ -1,12 +1,9 @@
 import Link from "next/link";
+import { SOCIAL_LINKS } from "@/data/social";
 
 const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "clarity@insightcryptolearning.com";
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "447957458795";
 const WHATSAPP_DISPLAY = process.env.NEXT_PUBLIC_WHATSAPP_DISPLAY || "07957 458795";
-const FACEBOOK_URL = "https://www.facebook.com/share/1EgtUkEoMY/?mibextid=wwXIfr";
-const X_URL = "https://x.com/cryptobudhat3ch?s=11";
-const LINKEDIN_URL =
-  "https://www.linkedin.com/in/crypto-budha-742569437?utm_source=share_via&utm_content=profile&utm_medium=member_ios";
 
 export default function Footer() {
   return (
@@ -24,31 +21,18 @@ export default function Footer() {
             &ldquo;what is a blockchain?&rdquo; to confidently understanding
             the crypto industry — one day, and one quiz, at a time.
           </p>
-          <div className="mt-4 flex gap-4 text-sm text-muted">
-            <a
-              href={FACEBOOK_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gold"
-            >
-              Facebook
-            </a>
-            <a
-              href={X_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gold"
-            >
-              X
-            </a>
-            <a
-              href={LINKEDIN_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gold"
-            >
-              LinkedIn
-            </a>
+          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted">
+            {SOCIAL_LINKS.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-gold"
+              >
+                {s.label}
+              </a>
+            ))}
           </div>
         </div>
 

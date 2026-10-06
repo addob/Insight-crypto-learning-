@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { SOCIAL_LINKS } from "@/data/social";
 
 export const metadata: Metadata = {
   title: "About Us | Insight Crypto Learning",
@@ -144,36 +145,22 @@ export default function AboutPage() {
           <p className="mt-3 font-semibold text-white">
             Just honest guidance from people who&rsquo;ve been where you are.
           </p>
-          <p className="mt-5 text-sm text-muted">
-            Follow us on{" "}
-            <a
-              href="https://www.facebook.com/share/1EgtUkEoMY/?mibextid=wwXIfr"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gold hover:underline"
-            >
-              Facebook
-            </a>{" "}
-            or{" "}
-            <a
-              href="https://x.com/cryptobudhat3ch?s=11"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gold hover:underline"
-            >
-              X
-            </a>{" "}
-            or{" "}
-            <a
-              href="https://www.linkedin.com/in/crypto-budha-742569437?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gold hover:underline"
-            >
-              LinkedIn
-            </a>
-            .
-          </p>
+          <div className="mt-5">
+            <p className="text-sm text-muted">Follow us:</p>
+            <div className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+              {SOCIAL_LINKS.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gold hover:underline"
+                >
+                  {s.label}
+                </a>
+              ))}
+            </div>
+          </div>
         </section>
 
         <section className="card p-6">

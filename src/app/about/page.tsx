@@ -162,6 +162,15 @@ export default function AboutPage() {
               className="text-gold hover:underline"
             >
               X
+            </a>{" "}
+            or{" "}
+            <a
+              href="https://www.linkedin.com/in/crypto-budha-742569437?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold hover:underline"
+            >
+              LinkedIn
             </a>
             .
           </p>

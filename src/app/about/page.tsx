@@ -153,6 +153,15 @@ export default function AboutPage() {
               className="text-gold hover:underline"
             >
               Facebook
+            </a>{" "}
+            or{" "}
+            <a
+              href="https://x.com/cryptobudhat3ch?s=11"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold hover:underline"
+            >
+              X
             </a>
             .
           </p>

@@ -346,6 +346,28 @@ export const blogPosts: BlogPost[] = [
       { label: "Crypto Security Guide", href: "/crypto-security" },
     ],
   },
+  {
+    slug: "what-is-the-clarity-act-supposed-to-solve",
+    category: "crypto-regulation",
+    title: "What Is the CLARITY Act Supposed to Solve?",
+    description:
+      "The problem the US CLARITY Act is trying to fix — unclear regulatory jurisdiction over digital assets — and where the bill actually stands.",
+    publishedAt: "2026-10-06",
+    updatedAt: "2026-10-06",
+    author: "Insight Crypto Learning Team",
+    body: [
+      "The CLARITY Act — formally the Digital Asset Market Clarity Act — is a piece of United States legislation, not UK law. It's worth understanding anyway, because so much of the crypto industry (major exchanges, issuers, and infrastructure providers) operates in or is shaped by the US market, and because the specific problem it's trying to solve shows up, in different forms, in most countries that haven't yet settled how to regulate digital assets.",
+      "That problem, in plain terms: for years, nobody — including the industry itself — has had a reliable answer to \"which US regulator actually has authority over this token, and what rules apply to it?\" The Securities and Exchange Commission (SEC) has generally treated most digital assets as securities, applying a legal test built decades ago for things like company shares. Critics, across the industry and in Congress, argue that test fits awkwardly onto decentralised networks, and that the result has been \"regulation by enforcement\" — the SEC suing exchanges and projects after the fact, rather than setting out clear rules in advance that a business could actually follow.",
+      "The CLARITY Act's core fix is to draw a clearer jurisdictional line. It proposes a defined category of \"digital commodity\" for tokens built on sufficiently decentralised networks, placing them under the Commodity Futures Trading Commission (CFTC) — the regulator that already oversees commodities like oil and wheat — rather than the SEC's securities regime. It sets out a test for when a token has \"matured\" from an early, centrally-controlled fundraising stage into a genuinely decentralised network no longer meaningfully controlled by one team. And it lays out registration, disclosure, and customer-protection requirements for the exchanges, brokers, and custodians that handle these assets — addressing gaps that became painfully visible when FTX collapsed in 2022, such as keeping customer funds properly segregated from a platform's own.",
+      "The ambition behind it is straightforward: give US-based crypto businesses enough legal certainty to operate domestically instead of relocating offshore, let institutional investors participate with clearer compliance obligations, and give ordinary users baseline consumer protections that are currently patched together unevenly, platform by platform.",
+      "As of 6 October 2026, the CLARITY Act is not yet law. It passed the House of Representatives in July 2025 with bipartisan support (294–134), and cleared the Senate Banking Committee in May 2026. But a Senate procedural vote to advance the bill failed on 15 September 2026, falling short — 49 to 50 — of the 60 votes needed, with opposition cutting across party lines. Negotiations are continuing over several disputed points, including ethics provisions, stablecoin-related yield rules, and anti-money-laundering requirements. Its final shape, and whether it passes at all, could still change substantially.",
+      "Because this is moving legislation, treat the status above as a snapshot, not a permanent fact. For the current text and status, the authoritative source is Congress's own bill tracker at congress.gov, not this page or any single news article.",
+    ],
+    relatedLinks: [
+      { label: "Crypto Regulation", href: "/crypto-regulation" },
+      { label: "Day 57: Crypto Regulation: UK & FCA Overview", href: "/course/day-57-crypto-regulation-uk-fca-overview" },
+    ],
+  },
 ];
 
 export function getBlogPost(category: string, slug: string): BlogPost | undefined {

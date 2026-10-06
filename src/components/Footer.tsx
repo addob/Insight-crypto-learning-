@@ -44,6 +44,7 @@ export default function Footer() {
             <li><Link href="/blockchain" className="hover:text-gold">Blockchain Explained</Link></li>
             <li><Link href="/defi" className="hover:text-gold">DeFi Explained</Link></li>
             <li><Link href="/crypto-regulation" className="hover:text-gold">Crypto Regulation</Link></li>
+            <li><Link href="/crypto-glossary" className="hover:text-gold">Crypto Glossary</Link></li>
           </ul>
         </div>
 

@@ -11,4 +11,8 @@ export const SOCIAL_LINKS: SocialLink[] = [
     href: "https://www.linkedin.com/in/crypto-budha-742569437?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
   },
   { label: "Threads", href: "https://www.threads.com/@insightcryptolearning?igshid=NTc4MTIwNjQ2YQ==" },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/insightcryptolearning?stkn=MWtpcnJ0djNka3BjeQ%3D%3D&utm_source=qr",
+  },
 ];

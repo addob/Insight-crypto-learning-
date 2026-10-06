@@ -177,6 +177,175 @@ export const blogPosts: BlogPost[] = [
       { label: "Day 33: ERC-20 Tokens Explained", href: "/course/day-33-erc-20-tokens-explained" },
     ],
   },
+  {
+    slug: "how-to-spot-a-crypto-scam",
+    category: "crypto-security",
+    title: "How to Spot a Crypto Scam",
+    description:
+      "The warning signs that show up across almost every crypto scam, and a simple framework for pausing before you lose money.",
+    publishedAt: "2026-10-06",
+    author: "Insight Crypto Learning Team",
+    body: [
+      "Crypto scams take dozens of different forms, but most of them share the same small set of warning signs underneath. Learning to recognise the pattern matters far more than memorising every specific scam you'll ever encounter, because new variations appear constantly while the underlying tactics barely change.",
+      "Urgency is the first and most reliable flag. Scammers want you acting before you think — a price \"about to explode\", a slot that's \"about to close\", an account that will be \"permanently locked\" unless you act now. Genuine opportunities and genuine problems can almost always wait long enough for you to verify them independently.",
+      "Guaranteed returns are the second. No legitimate investment — crypto or otherwise — can promise a fixed, guaranteed profit. Markets carry real risk; anyone claiming otherwise is either lying or doesn't understand what they're offering, and neither is someone you should be sending money to.",
+      "Unsolicited contact is the third. A message from a stranger on Telegram, Discord, or social media offering trading help, a \"guaranteed\" signal group, or an investment opportunity is overwhelmingly more likely to be a scam than a genuine opportunity — legitimate opportunities rarely need to cold-message strangers to find participants.",
+      "And the request itself is often the clearest tell of all: being asked to send crypto first to \"unlock\" a larger return, being asked for your seed phrase to \"verify\" your wallet, or being asked to download unfamiliar software to \"claim\" something. None of these are things any legitimate platform, project, or support team will ever genuinely need from you.",
+      "The practical habit worth building is simple: when something feels exciting or urgent, treat that feeling itself as a signal to slow down, not speed up. Verify independently, through a channel you found yourself — never one that was handed to you — before you act.",
+    ],
+    relatedLinks: [
+      { label: "Day 12: Common Crypto Scams & How to Spot Them", href: "/course/day-12-common-crypto-scams-how-to-spot-them" },
+      { label: "10 Common Crypto Scams", href: "/blog/crypto-security/10-common-crypto-scams" },
+      { label: "Crypto Security Guide", href: "/crypto-security" },
+    ],
+  },
+  {
+    slug: "10-common-crypto-scams",
+    category: "crypto-security",
+    title: "10 Common Crypto Scams",
+    description:
+      "A field guide to the scam patterns newcomers run into most often, from fake giveaways to pig-butchering schemes.",
+    publishedAt: "2026-10-06",
+    author: "Insight Crypto Learning Team",
+    body: [
+      "Most crypto scams fall into a handful of recognisable categories. Knowing the names and mechanics of the common ones makes it much easier to spot a new example, even dressed up differently.",
+      "Phishing sites and fake apps impersonate a real wallet, exchange, or project to trick you into entering your seed phrase or approving a malicious transaction. Fake giveaways promise to \"double\" any crypto sent to a given address, often impersonating a celebrity or official account. Rug pulls happen when a project's creators drain its liquidity or abandon it entirely, leaving holders with a worthless token.",
+      "Pig-butchering scams build a long-term relationship, often romantic or friendly, over weeks or months, before introducing a fake \"investment platform\" and encouraging increasingly large deposits. Fake exchanges and trading platforms show convincing but entirely fabricated balances and profits, right up until you try to withdraw. Impersonation scams pose as customer support, a well-known figure, or a project's official team member to extract funds or credentials directly.",
+      "Ponzi and high-yield investment schemes pay early participants using money from new participants, collapsing once recruitment slows — a structure that eventually fails by mathematical necessity, however convincing it looks in the early stages. Fake mining or staking platforms promise fixed daily returns from hardware or validators that typically don't exist. SIM-swap attacks hijack your phone number to intercept two-factor authentication codes and take over linked accounts. And pump-and-dump groups coordinate buying a low-value token to inflate its price, then sell into the resulting rally, leaving later buyers holding the loss.",
+      "None of these require sophisticated technical knowledge to avoid — they rely on urgency, trust, and emotion, not on you misunderstanding the technology. Recognising the pattern, and slowing down whenever you notice one, is most of the defence.",
+    ],
+    relatedLinks: [
+      { label: "How to Spot a Crypto Scam", href: "/blog/crypto-security/how-to-spot-a-crypto-scam" },
+      { label: "What Is a Rug Pull?", href: "/blog/crypto-security/what-is-a-rug-pull" },
+      { label: "Day 12: Common Crypto Scams & How to Spot Them", href: "/course/day-12-common-crypto-scams-how-to-spot-them" },
+    ],
+  },
+  {
+    slug: "what-is-a-rug-pull",
+    category: "crypto-security",
+    title: "What Is a Rug Pull?",
+    description:
+      "How rug pulls actually work, the difference between a hard rug and a slow rug, and the warning signs that show up before the funds disappear.",
+    publishedAt: "2026-10-06",
+    author: "Insight Crypto Learning Team",
+    body: [
+      "A rug pull is when a crypto project's creators abruptly withdraw funds, abandon development, or otherwise exit with investors' money, leaving a token that's collapsed in value or become untradeable. The name comes from the idiom \"pulling the rug out\" — the floor disappears with no warning.",
+      "There are two broad patterns. A hard rug pull happens fast and deliberately: the team drains the project's liquidity pool in a single transaction, or uses a hidden function in the token's contract to mint and sell an enormous new supply, crashing the price to near zero within minutes. A slow rug pull is subtler — the team quietly stops development, stops engaging with the community, and sells off their own holdings gradually, so the token fades away rather than collapsing instantly.",
+      "Certain warning signs show up before most rug pulls, though none of them guarantee one is coming. An anonymous team with no verifiable track record is a real risk factor, not a neutral detail. Liquidity that isn't genuinely locked (or where the \"lock\" can't be independently verified on-chain) leaves the door open for an instant hard rug. A token contract with functions that let the owner mint unlimited new supply, or pause other holders' ability to sell, hands the team a technical ability to rug regardless of their stated intentions. And aggressive hype with very little substantive product behind it is a pattern worth real scepticism.",
+      "Before putting money into a new or small-cap token, it's worth doing the boring checks: look up the contract address on a block explorer, check whether liquidity is actually locked and for how long, see whether the contract has been independently audited, and search for the team's identity and track record outside the project's own marketing. None of this is foolproof, but it catches a meaningful share of the worst cases.",
+    ],
+    relatedLinks: [
+      { label: "Glossary: Rug Pull", href: "/crypto-glossary/rug-pull" },
+      { label: "How to Check a Crypto Contract Address", href: "/blog/crypto-security/how-to-check-a-crypto-contract-address" },
+      { label: "How to Research a New Crypto Project", href: "/blog/crypto-security/how-to-research-a-new-crypto-project" },
+    ],
+  },
+  {
+    slug: "how-crypto-phishing-works",
+    category: "crypto-security",
+    title: "How Crypto Phishing Works",
+    description:
+      "The specific mechanics behind crypto phishing attacks — fake sites, malicious approvals, and clipboard hijacking — and how to defend against each.",
+    publishedAt: "2026-10-06",
+    author: "Insight Crypto Learning Team",
+    body: [
+      "Phishing in crypto works the same way it does everywhere else — tricking you into handing over something sensitive by impersonating something trustworthy — but the specific techniques are worth understanding, because the damage is instant and irreversible once it happens.",
+      "The most direct version is a fake wallet or exchange login page, often reached through a sponsored search ad or a link in a direct message, built to look identical to the real thing. Entering your seed phrase or password there sends it straight to the attacker. The defence is simple but easy to forget under pressure: never type your seed phrase into any website, ever, under any circumstances — no legitimate wallet interface ever asks for it.",
+      "A more modern and more dangerous version is the malicious approval request. Instead of asking for your seed phrase directly, a fake dApp prompts your wallet to sign a transaction that looks routine but actually grants the attacker's contract permission to move tokens from your wallet — sometimes immediately, sometimes at a later date the attacker chooses. This is why reading what a transaction is actually requesting, not just clicking \"confirm\" out of habit, matters every single time, not just the first time.",
+      "Clipboard hijacking malware is another variant: software quietly monitors your clipboard, and when it detects you've copied a wallet address, silently swaps it for the attacker's address before you paste it. Always double-check the full destination address after pasting it, especially for larger transfers.",
+      "And a simpler but still effective tactic is fake customer support — accounts that reply to your public complaint on social media offering to \"help\", then move the conversation to direct messages and ask for your seed phrase or remote access to your device. Genuine support teams for reputable platforms don't operate this way, and never need your seed phrase to help with an account issue.",
+    ],
+    relatedLinks: [
+      { label: "Day 13: Phishing, Fake Apps & Social Engineering", href: "/course/day-13-phishing-fake-apps-social-engineering" },
+      { label: "How to Avoid Fake Crypto Websites", href: "/blog/crypto-security/how-to-avoid-fake-crypto-websites" },
+      { label: "How to Protect Your Seed Phrase", href: "/blog/crypto-security/how-to-protect-your-seed-phrase" },
+    ],
+  },
+  {
+    slug: "how-to-protect-your-seed-phrase",
+    category: "crypto-security",
+    title: "How to Protect Your Seed Phrase",
+    description:
+      "Practical, concrete steps for storing your wallet's seed phrase safely — and the common mistakes that undo all of them.",
+    publishedAt: "2026-10-06",
+    author: "Insight Crypto Learning Team",
+    body: [
+      "Your seed phrase — the list of words generated when you set up a wallet — can restore full access to everything that wallet holds, on any device, with no further verification needed. Protecting it properly isn't optional extra caution; it's the single most important security habit in crypto.",
+      "Start with where it should never go. Never type it into a website or app, including a wallet's own interface after initial setup — a genuine wallet only asks for it once, during creation or recovery. Never store it in a cloud note, email, messaging app, or photo — all of these can be breached remotely, often without you ever knowing. Never share it with anyone claiming to be customer support; no legitimate platform's support staff need it to help you.",
+      "The standard, low-tech approach is still the most reliable for most people: write it on paper, by hand, and store that paper somewhere secure and private — not somewhere obviously labelled \"crypto\" or \"passwords\". Some people go further and stamp it into metal, which survives fire and water damage that paper doesn't. Whichever method you use, consider keeping a second copy in a separate physical location, in case of fire, flood, or theft at the first.",
+      "For larger holdings, it's worth knowing that more advanced setups exist. A multisignature (multisig) wallet requires several separate keys to authorise a transaction, so no single compromised seed phrase is enough on its own. Shamir's Secret Sharing splits a single seed into multiple fragments, requiring a minimum number of them to reconstruct the original. These add real complexity, so they're generally worth the effort only once the amount at risk justifies it.",
+      "Whatever method you choose, the test is the same: could someone who found this seed phrase move your funds? If the honest answer is yes, the storage isn't secure enough yet, regardless of how careful you otherwise feel.",
+    ],
+    relatedLinks: [
+      { label: "Glossary: Seed Phrase", href: "/crypto-glossary/seed-phrase" },
+      { label: "Day 9: Private Keys & Seed Phrases", href: "/course/day-9-private-keys-seed-phrases" },
+      { label: "How Do Crypto Wallets Work?", href: "/blog/crypto-guides/how-do-crypto-wallets-work" },
+    ],
+  },
+  {
+    slug: "how-to-check-a-crypto-contract-address",
+    category: "crypto-security",
+    title: "How to Check a Crypto Contract Address",
+    description:
+      "How to verify you're interacting with a genuine token or contract, not a convincing fake with a similar name or address.",
+    publishedAt: "2026-10-06",
+    author: "Insight Crypto Learning Team",
+    body: [
+      "Anyone can create a token with any name and symbol they like — including one that copies a popular, legitimate project exactly. The only reliable way to know you're holding or trading the genuine article is to verify the contract address itself, not just the name shown in an app or search result.",
+      "Start at the source: the project's own official website, documentation, or verified social media account should publish its real contract address. Copy it from there directly, rather than trusting whatever a wallet's search function or a third-party site surfaces first — fake tokens routinely copy a real project's name, logo, and symbol exactly.",
+      "A block explorer (the tool for the relevant network — for example Etherscan for Ethereum) lets you look up that address directly and see whether the contract is \"verified\", meaning its source code has been published and matches what's actually deployed. An unverified contract isn't automatically a scam, but it does mean you can't independently inspect what it actually does, which is a meaningfully higher-risk position to be in.",
+      "Watch out for address poisoning too: scammers sometimes create a wallet address that looks similar to one you've transacted with before — matching the first and last few characters, which is often all people glance at — then send a tiny, unsolicited transaction from it, hoping you'll copy it from your transaction history by mistake later. Always verify a full address character by character for any transaction that matters, not just the start and end.",
+      "Checking a contract address takes a couple of minutes. Losing funds to a fake token takes seconds and is permanent. The asymmetry is the entire argument for making this a habit, not an occasional precaution.",
+    ],
+    relatedLinks: [
+      { label: "What Is a Rug Pull?", href: "/blog/crypto-security/what-is-a-rug-pull" },
+      { label: "Day 12: Common Crypto Scams & How to Spot Them", href: "/course/day-12-common-crypto-scams-how-to-spot-them" },
+      { label: "Crypto Security Guide", href: "/crypto-security" },
+    ],
+  },
+  {
+    slug: "how-to-research-a-new-crypto-project",
+    category: "crypto-security",
+    title: "How to Research a New Crypto Project",
+    description:
+      "A practical due-diligence framework for evaluating a crypto project critically, before you put any money into it.",
+    publishedAt: "2026-10-06",
+    author: "Insight Crypto Learning Team",
+    body: [
+      "Most harm done to newcomers in crypto doesn't come from sophisticated attacks — it comes from putting money into a project without doing the basic checks first. Genuine research takes longer than reading a few social media posts, but it's not complicated once you know what to actually look for.",
+      "Start with the team. Are real people, with names and verifiable track records, publicly associated with the project? An anonymous team isn't automatically disqualifying — some legitimate projects have anonymous founders — but it does remove a layer of accountability, and should raise the bar for everything else you check.",
+      "Read the actual documentation, not just the marketing. A legitimate project can usually explain, in reasonably specific terms, what problem it solves and how. Vague language, excessive buzzwords, and documentation that reads more like a sales pitch than a technical explanation are worth noticing.",
+      "Check the tokenomics: how many tokens exist, how they're distributed, and whether the team holds a large share with little or no lock-up period — a structure that lets them sell into early demand regardless of the project's long-term success. Look for independent smart contract audits, and read enough of the summary to understand what was actually tested, rather than just noting that an audit exists.",
+      "Be careful how you weigh community size and social proof. A large, enthusiastic community doesn't verify a project — it can be bought, and even when genuine, enthusiasm isn't evidence of technical or financial soundness. Treat hype as something to investigate further, not as a substitute for your own research.",
+      "None of these checks guarantee a project is legitimate. But doing them consistently, and walking away when the answers are evasive or missing entirely, filters out a significant share of the projects that go on to fail or turn out to be scams.",
+    ],
+    relatedLinks: [
+      { label: "What Is a Rug Pull?", href: "/blog/crypto-security/what-is-a-rug-pull" },
+      { label: "How to Check a Crypto Contract Address", href: "/blog/crypto-security/how-to-check-a-crypto-contract-address" },
+      { label: "Crypto Security Guide", href: "/crypto-security" },
+    ],
+  },
+  {
+    slug: "how-to-avoid-fake-crypto-websites",
+    category: "crypto-security",
+    title: "How to Avoid Fake Crypto Websites",
+    description:
+      "Practical habits for making sure you're on the genuine wallet, exchange, or project website — not a convincing lookalike.",
+    publishedAt: "2026-10-06",
+    author: "Insight Crypto Learning Team",
+    body: [
+      "Fake crypto websites — convincing copies of real wallets, exchanges, and project pages — are one of the most common ways people lose funds, precisely because they don't require tricking the technology, only the person looking at the screen.",
+      "The single most reliable habit is to never rely on a search engine or a link in a message to reach a site that touches your funds. Search ads are routinely bought by scammers impersonating popular platforms, sometimes ranking above the genuine result. Instead, bookmark the official URLs you use regularly once you've verified them, and navigate from those bookmarks every time.",
+      "When you do need to find a new site, verify it through multiple independent sources — the project's official, verified social media accounts, cross-checked against each other — rather than trusting a single link someone sent you. Read the URL carefully, character by character: typosquatting (a near-identical domain with one letter swapped, added, or a different extension) is extremely common and easy to miss at a glance.",
+      "A padlock icon or \"https\" in the address bar means the connection is encrypted — it does not mean the site is legitimate. Scam sites can and do have valid security certificates; this check tells you nothing about who actually owns the site.",
+      "Finally, treat any site that asks you to connect your wallet or enter your seed phrase as higher stakes than ordinary browsing. If anything feels slightly off — an unfamiliar design, a permission request that seems broader than it should be, pressure to act quickly — stop and verify independently before continuing, even if it means missing a time-limited offer. A missed opportunity costs you nothing; a connected wallet to a malicious site can cost you everything in it.",
+    ],
+    relatedLinks: [
+      { label: "How Crypto Phishing Works", href: "/blog/crypto-security/how-crypto-phishing-works" },
+      { label: "Day 13: Phishing, Fake Apps & Social Engineering", href: "/course/day-13-phishing-fake-apps-social-engineering" },
+      { label: "Crypto Security Guide", href: "/crypto-security" },
+    ],
+  },
 ];
 
 export function getBlogPost(category: string, slug: string): BlogPost | undefined {

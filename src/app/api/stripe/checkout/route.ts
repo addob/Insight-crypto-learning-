@@ -78,6 +78,12 @@ export async function POST(req: Request) {
       subscription_data:
         plan === "monthly" ? { metadata: { userId: user.id, plan } } : undefined,
       integration_identifier: checkoutIntegrationIdentifier("insight-crypto-learning"),
+      // Managed Payments (on by default for new Stripe accounts) requires
+      // every product to carry an eligible tax code, which ours don't yet.
+      // Disable it for this session rather than failing checkout outright —
+      // the installed stripe-node version predates this param's types, so
+      // it's passed through untyped per Stripe's own error-message guidance.
+      ...({ managed_payments: { enabled: false } } as Record<string, unknown>),
     });
 
     return NextResponse.json({ url: checkoutSession.url });

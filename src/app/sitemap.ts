@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     { url: `${siteUrl}/`, changeFrequency: "weekly", priority: 1 },
     { url: `${siteUrl}/pricing`, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${siteUrl}/about`, changeFrequency: "yearly", priority: 0.6 },
     { url: `${siteUrl}/crypto-for-beginners`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/crypto-security`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/blockchain`, changeFrequency: "monthly", priority: 0.8 },

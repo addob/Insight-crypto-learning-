@@ -29,6 +29,7 @@ export default function Footer() {
           <ul className="space-y-2 text-sm">
             <li><Link href="/#curriculum" className="hover:text-gold">Curriculum</Link></li>
             <li><Link href="/pricing" className="hover:text-gold">Pricing</Link></li>
+            <li><Link href="/about" className="hover:text-gold">About us</Link></li>
             <li><Link href="/login" className="hover:text-gold">Student login</Link></li>
             <li><Link href="/signup" className="hover:text-gold">Create account</Link></li>
           </ul>

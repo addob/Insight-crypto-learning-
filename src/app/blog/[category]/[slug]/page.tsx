@@ -85,6 +85,23 @@ export default function BlogPostPage({
         ))}
       </article>
 
+      {post.relatedLinks && post.relatedLinks.length > 0 && (
+        <div className="card mt-8 p-6">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gold">
+            Go deeper
+          </h2>
+          <ul className="space-y-2 text-sm">
+            {post.relatedLinks.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="text-gold hover:underline">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <div className="card mt-12 p-6">
         <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-gold">
           Want structured learning instead?

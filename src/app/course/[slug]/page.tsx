@@ -4,10 +4,21 @@ import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getCourseDay } from "@/data/curriculum";
+import { getCourseDay, WEEK_TITLES } from "@/data/curriculum";
+import { glossary } from "@/data/glossary";
 import { canAccessDay, TOTAL_DAYS } from "@/lib/access";
 import { dayUrlSlug, parseDaySlug } from "@/lib/slug";
 import QuizForm from "@/components/QuizForm";
+import Breadcrumbs from "@/components/Breadcrumbs";
+
+/** Best-effort match against the glossary so a term already written for a
+ *  lesson can also link to its full glossary entry — no guessing beyond an
+ *  exact (case-insensitive) name match, so a non-match just renders plain. */
+function glossaryHrefFor(termName: string): string | null {
+  const norm = termName.trim().toLowerCase();
+  const entry = glossary.find((g) => g.term.toLowerCase() === norm);
+  return entry ? `/crypto-glossary/${entry.slug}` : null;
+}
 
 function resolveDay(slug: string) {
   const day = parseDaySlug(slug);
@@ -72,14 +83,19 @@ export default async function CourseDayPage({ params }: { params: { slug: string
 
   return (
     <div className="container-page max-w-3xl py-12">
-      <div className="mb-8 flex items-center justify-between text-sm text-muted">
+      <div className="mb-2 flex items-center justify-between text-sm text-muted">
         <Link href="/dashboard" className="hover:text-white">
           ← Dashboard
         </Link>
-        <span>
-          Day {day} of {TOTAL_DAYS} · Week {courseDay.week}
-        </span>
       </div>
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "60-Day Course", href: "/#curriculum" },
+          { label: `Week ${courseDay.week}: ${WEEK_TITLES[courseDay.week]}` },
+          { label: `Day ${day} of ${TOTAL_DAYS}` },
+        ]}
+      />
 
       <h1 className="text-3xl font-extrabold">{courseDay.title}</h1>
       <p className="mt-2 text-muted">{courseDay.summary}</p>
@@ -110,12 +126,23 @@ export default async function CourseDayPage({ params }: { params: { slug: string
             Terms you should know
           </h2>
           <dl className="space-y-3 text-sm">
-            {courseDay.terms.map((t, i) => (
-              <div key={i}>
-                <dt className="font-semibold">{t.term}</dt>
-                <dd className="text-muted">{t.definition}</dd>
-              </div>
-            ))}
+            {courseDay.terms.map((t, i) => {
+              const glossaryHref = glossaryHrefFor(t.term);
+              return (
+                <div key={i}>
+                  <dt className="font-semibold">
+                    {glossaryHref ? (
+                      <Link href={glossaryHref} className="text-gold hover:underline">
+                        {t.term}
+                      </Link>
+                    ) : (
+                      t.term
+                    )}
+                  </dt>
+                  <dd className="text-muted">{t.definition}</dd>
+                </div>
+              );
+            })}
           </dl>
         </div>
       )}
@@ -226,14 +253,14 @@ function DayTeaser({
 
   return (
     <div className="container-page max-w-3xl py-12">
-      <div className="mb-8 flex items-center justify-between text-sm text-muted">
-        <Link href="/" className="hover:text-white">
-          ← Insight Crypto Learning
-        </Link>
-        <span>
-          Day {day} of {TOTAL_DAYS} · Week {courseDay.week}
-        </span>
-      </div>
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "60-Day Course", href: "/#curriculum" },
+          { label: `Week ${courseDay.week}: ${WEEK_TITLES[courseDay.week]}` },
+          { label: `Day ${day} of ${TOTAL_DAYS}` },
+        ]}
+      />
 
       {isFreeDay && (
         <span className="mb-3 inline-block rounded-full border border-mint/40 bg-mint/10 px-3 py-1 text-xs font-semibold text-mint">

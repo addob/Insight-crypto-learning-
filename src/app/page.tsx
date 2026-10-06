@@ -1,6 +1,16 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { courseDays, WEEK_TITLES } from "@/data/curriculum";
 import { TOTAL_DAYS } from "@/lib/access";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://insightcryptolearning.com";
+
+export const metadata: Metadata = {
+  title: "Crypto Education for Beginners | 60-Day Crypto Course",
+  description:
+    "Learn cryptocurrency, Bitcoin, blockchain, wallets, DeFi, NFTs, trading and crypto security through Insight Crypto Learning's structured 60-day course.",
+  alternates: { canonical: "/" },
+};
 
 const weeks = Array.from(new Set(courseDays.map((d) => d.week))).sort((a, b) => a - b);
 
@@ -27,9 +37,63 @@ const faqs = [
   },
 ];
 
+const courseJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Course",
+  name: "Insight Crypto Learning — 60-Day Crypto Course",
+  description:
+    "A structured 60-day course that takes complete newcomers into the crypto industry, with a daily lesson and a 10-question quiz each day.",
+  provider: {
+    "@type": "Organization",
+    name: "Insight Crypto Learning",
+    sameAs: siteUrl,
+  },
+  url: siteUrl,
+  inLanguage: "en-GB",
+  hasCourseInstance: {
+    "@type": "CourseInstance",
+    courseMode: "online",
+    courseWorkload: "PT15M",
+  },
+  offers: [
+    {
+      "@type": "Offer",
+      category: "subscription",
+      price: "5",
+      priceCurrency: "GBP",
+      url: `${siteUrl}/pricing`,
+    },
+    {
+      "@type": "Offer",
+      category: "one-time",
+      price: "50",
+      priceCurrency: "GBP",
+      url: `${siteUrl}/pricing`,
+    },
+  ],
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
 export default function HomePage() {
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       {/* Hero */}
       <section className="border-b border-border bg-gradient-to-b from-panel to-ink">
         <div className="container-page grid gap-10 py-20 md:grid-cols-2 md:items-center">

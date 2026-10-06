@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
+
 const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "clarity@insightcryptolearning.com";
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "447957458795";
 const WHATSAPP_DISPLAY = process.env.NEXT_PUBLIC_WHATSAPP_DISPLAY || "07957 458795";
+
+export const metadata: Metadata = {
+  title: "Contact Us | Insight Crypto Learning",
+  description:
+    "Questions about the 60-day crypto course, a payment, or your account? Get in touch by email or WhatsApp — we usually reply within one business day.",
+  alternates: { canonical: "/contact" },
+};
 
 export default function ContactPage() {
   return (

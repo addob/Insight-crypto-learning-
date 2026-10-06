@@ -1,3 +1,12 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Risk Disclaimer | Insight Crypto Learning",
+  description:
+    "Insight Crypto Learning is an educational course, not financial, investment, or tax advice. Read our full risk disclaimer before investing in cryptoassets.",
+  alternates: { canonical: "/legal/disclaimer" },
+};
+
 export default function DisclaimerPage() {
   return (
     <div className="container-page max-w-3xl py-16">

@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Service | Insight Crypto Learning",
+  description: "The terms that govern your use of the Insight Crypto Learning website and 60-day course.",
+  alternates: { canonical: "/legal/terms" },
+};
+
 export default function TermsPage() {
   return (
     <div className="container-page max-w-3xl py-16">

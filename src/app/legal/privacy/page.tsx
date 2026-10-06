@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | Insight Crypto Learning",
+  description: "How Insight Crypto Learning collects, uses, and protects your personal data.",
+  alternates: { canonical: "/legal/privacy" },
+};
+
 export default function PrivacyPage() {
   return (
     <div className="container-page max-w-3xl py-16">

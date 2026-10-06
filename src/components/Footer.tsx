@@ -3,6 +3,7 @@ import Link from "next/link";
 const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "clarity@insightcryptolearning.com";
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "447957458795";
 const WHATSAPP_DISPLAY = process.env.NEXT_PUBLIC_WHATSAPP_DISPLAY || "07957 458795";
+const FACEBOOK_URL = "https://www.facebook.com/share/1EgtUkEoMY/?mibextid=wwXIfr";
 
 export default function Footer() {
   return (
@@ -20,6 +21,14 @@ export default function Footer() {
             &ldquo;what is a blockchain?&rdquo; to confidently understanding
             the crypto industry — one day, and one quiz, at a time.
           </p>
+          <a
+            href={FACEBOOK_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-block text-sm text-muted hover:text-gold"
+          >
+            Facebook
+          </a>
         </div>
 
         <div>

@@ -144,6 +144,18 @@ export default function AboutPage() {
           <p className="mt-3 font-semibold text-white">
             Just honest guidance from people who&rsquo;ve been where you are.
           </p>
+          <p className="mt-5 text-sm text-muted">
+            Follow us on{" "}
+            <a
+              href="https://www.facebook.com/share/1EgtUkEoMY/?mibextid=wwXIfr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold hover:underline"
+            >
+              Facebook
+            </a>
+            .
+          </p>
         </section>
 
         <section className="card p-6">

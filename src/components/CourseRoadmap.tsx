@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { courseDays, WEEK_TITLES } from "@/data/curriculum";
+import { dayUrlSlug } from "@/lib/slug";
 
 interface Props {
   unlockedDay: number;
@@ -23,7 +24,7 @@ export default function CourseRoadmap({ unlockedDay, hasAccess, passedDays, link
               .filter((d) => d.week === week)
               .map((d) => {
                 const passed = passedDays.has(d.day);
-                const accessible = d.day === 1 || (hasAccess && d.day <= unlockedDay);
+                const accessible = d.day <= 2 ? d.day <= unlockedDay : hasAccess && d.day <= unlockedDay;
                 const isNext = d.day === unlockedDay && !passed;
 
                 const cardClasses = [
@@ -64,7 +65,11 @@ export default function CourseRoadmap({ unlockedDay, hasAccess, passedDays, link
                 }
 
                 return (
-                  <Link key={d.day} href={`${linkPrefix}/${d.day}`} className={cardClasses}>
+                  <Link
+                    key={d.day}
+                    href={`${linkPrefix}/${dayUrlSlug(d.day, d.title)}`}
+                    className={cardClasses}
+                  >
                     {content}
                   </Link>
                 );

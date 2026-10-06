@@ -7,8 +7,8 @@ const WHATSAPP_DISPLAY = process.env.NEXT_PUBLIC_WHATSAPP_DISPLAY || "07957 4587
 export default function Footer() {
   return (
     <footer className="mt-24 border-t border-border bg-panel">
-      <div className="container-page grid gap-10 py-14 md:grid-cols-4">
-        <div>
+      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="sm:col-span-2 lg:col-span-1">
           <div className="mb-3 flex items-center gap-2 text-lg font-bold">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gold text-ink">
               ₿
@@ -31,6 +31,19 @@ export default function Footer() {
             <li><Link href="/pricing" className="hover:text-gold">Pricing</Link></li>
             <li><Link href="/login" className="hover:text-gold">Student login</Link></li>
             <li><Link href="/signup" className="hover:text-gold">Create account</Link></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">
+            Learn
+          </h4>
+          <ul className="space-y-2 text-sm">
+            <li><Link href="/crypto-for-beginners" className="hover:text-gold">Crypto for Beginners</Link></li>
+            <li><Link href="/crypto-security" className="hover:text-gold">Crypto Security</Link></li>
+            <li><Link href="/blockchain" className="hover:text-gold">Blockchain Explained</Link></li>
+            <li><Link href="/defi" className="hover:text-gold">DeFi Explained</Link></li>
+            <li><Link href="/crypto-regulation" className="hover:text-gold">Crypto Regulation</Link></li>
           </ul>
         </div>
 

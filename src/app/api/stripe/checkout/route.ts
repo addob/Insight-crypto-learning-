@@ -35,6 +35,19 @@ export async function POST(req: Request) {
   let customerId = user.stripeCustomerId ?? undefined;
 
   try {
+    if (customerId) {
+      // A customer ID saved while the integration was in test mode (or for
+      // any other account that no longer exists in the current mode) isn't
+      // valid here — test and live mode keep entirely separate customer
+      // data. Detect that and fall through to creating a fresh one instead
+      // of failing checkout outright.
+      const stillExists = await stripe.customers
+        .retrieve(customerId)
+        .then((c) => !c.deleted)
+        .catch(() => false);
+      if (!stillExists) customerId = undefined;
+    }
+
     if (!customerId) {
       const customer = await stripe.customers.create({
         email: user.email,

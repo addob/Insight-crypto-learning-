@@ -33,10 +33,21 @@ export async function POST() {
   const stripe = getStripe()!;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-  const portalSession = await stripe.billingPortal.sessions.create({
-    customer: user.stripeCustomerId,
-    return_url: `${siteUrl}/dashboard`,
-  });
-
-  return NextResponse.json({ url: portalSession.url });
+  try {
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: user.stripeCustomerId,
+      return_url: `${siteUrl}/dashboard`,
+    });
+    return NextResponse.json({ url: portalSession.url });
+  } catch (err) {
+    // A customer ID saved while the integration was in test mode won't
+    // exist once the key switches to live mode (test and live keep
+    // entirely separate customer data) — there's no billing account to
+    // manage until they start a new checkout.
+    console.error("[stripe:portal]", err);
+    return NextResponse.json(
+      { error: "No billing account found for this user yet." },
+      { status: 404 }
+    );
+  }
 }

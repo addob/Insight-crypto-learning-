@@ -43,7 +43,9 @@ export default async function CourseDayPage({ params }: { params: { day: string 
           <p className="mb-6 text-sm text-muted">
             {day === 1
               ? "Something went wrong loading the free preview day. Please try again."
-              : "Pass the previous day's quiz at 90% or higher, and make sure your plan is active, to unlock this day."}
+              : day === 2
+                ? "Pass Day 1's quiz at 90% or higher to unlock this free preview day."
+                : "Pass the previous day's quiz at 90% or higher, and make sure your plan is active, to unlock this day."}
           </p>
           <div className="flex justify-center gap-3">
             <Link href="/dashboard" className="btn-secondary">

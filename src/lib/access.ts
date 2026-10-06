@@ -27,16 +27,17 @@ export function computeUnlockedDay(progress: Pick<Progress, "day" | "passed">[])
   return unlocked;
 }
 
-/** Day 1 is always a free preview. Every other day requires active paid access
+/** Days 1-2 are a free preview (Day 2 still requires passing Day 1's quiz to
+ *  unlock, same as any other day). Day 3 onward requires active paid access
  *  AND having unlocked that far via passed quizzes. */
 export function canAccessDay(
   day: number,
   user: Pick<User, "hasLifetime" | "accessUntil">,
   progress: Pick<Progress, "day" | "passed">[]
 ): boolean {
-  if (day === 1) return true;
-  if (!hasActiveAccess(user)) return false;
-  return day <= computeUnlockedDay(progress);
+  const unlocked = day <= computeUnlockedDay(progress);
+  if (day <= 2) return unlocked;
+  return hasActiveAccess(user) && unlocked;
 }
 
 export function scoreToPercent(correct: number, total: number): number {

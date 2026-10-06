@@ -56,7 +56,7 @@ export default function SignupPage() {
       <div className="card w-full max-w-md p-8">
         <h1 className="mb-1 text-2xl font-bold">Create your student account</h1>
         <p className="mb-6 text-sm text-muted">
-          Start with Day 1 free — no card required to browse the course.
+          Start with Days 1–2 free — no card required to browse the course.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">

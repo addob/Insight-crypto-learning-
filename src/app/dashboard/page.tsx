@@ -54,7 +54,7 @@ export default async function DashboardPage() {
         <div className="card mb-10 flex flex-col items-start gap-4 border-gold/50 p-6 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="font-semibold">
-              You&rsquo;re on the free preview — Day 1 only.
+              You&rsquo;re on the free preview — Days 1–2 only.
             </p>
             <p className="mt-1 text-sm text-muted">
               Enrol for £5/month or a one-off £50 to unlock all 60 days.

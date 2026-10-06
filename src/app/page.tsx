@@ -19,7 +19,7 @@ const faqs = [
   },
   {
     q: "Can I try before I pay?",
-    a: "Yes — create a free account and Day 1 is open to preview, including its quiz, before you decide to enrol.",
+    a: "Yes — create a free account and Days 1-2 are open to preview, including their quizzes, before you decide to enrol.",
   },
   {
     q: "Is this financial advice?",
@@ -48,14 +48,14 @@ export default function HomePage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href="/signup" className="btn-primary">
-                Start Day 1 free
+                Start free — Days 1 &amp; 2
               </Link>
               <Link href="/pricing" className="btn-secondary">
                 See pricing
               </Link>
             </div>
             <p className="mt-4 text-sm text-muted">
-              £5/month or a one-off £50 &middot; No card needed to preview Day 1
+              £5/month or a one-off £50 &middot; No card needed to preview Days 1–2
             </p>
           </div>
 

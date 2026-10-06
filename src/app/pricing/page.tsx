@@ -136,7 +136,7 @@ export default function PricingPage() {
           <Link href="/signup" className="text-gold hover:underline">
             Create a free account
           </Link>{" "}
-          and preview Day 1 before you pay.
+          and preview Days 1–2 before you pay.
         </p>
       </div>
     </div>

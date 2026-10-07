@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { courseDays } from "@/data/curriculum";
 import { glossary } from "@/data/glossary";
+import { scams } from "@/data/scams";
 import { BLOG_CATEGORIES, blogPosts } from "@/data/blog";
 import { dayUrlSlug } from "@/lib/slug";
 
@@ -17,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/defi`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/crypto-regulation`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/crypto-glossary`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${siteUrl}/crypto-scams`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/blog`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${siteUrl}/signup`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${siteUrl}/contact`, changeFrequency: "yearly", priority: 0.3 },
@@ -37,6 +39,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
+  const scamPages: MetadataRoute.Sitemap = scams.map((s) => ({
+    url: `${siteUrl}/crypto-scams/${s.slug}`,
+    changeFrequency: "yearly",
+    priority: 0.6,
+  }));
+
   const blogCategoryPages: MetadataRoute.Sitemap = BLOG_CATEGORIES.map((c) => ({
     url: `${siteUrl}/blog/${c.slug}`,
     changeFrequency: "weekly",
@@ -53,6 +61,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticPages,
     ...dayPages,
     ...glossaryPages,
+    ...scamPages,
     ...blogCategoryPages,
     ...blogPostPages,
   ];

@@ -290,6 +290,11 @@ export default function CryptoSecurityPage() {
               <Link href="/blockchain" className="text-gold hover:underline">
                 how blockchain works
               </Link>
+              . For a detailed breakdown of specific scam types and exactly
+              how scammers carry them out, see our free{" "}
+              <Link href="/crypto-scams" className="text-gold hover:underline">
+                crypto scams list
+              </Link>
               .
             </p>
             <ul className="mt-4 list-inside list-disc space-y-1 text-sm text-muted">

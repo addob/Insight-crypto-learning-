@@ -12,24 +12,63 @@ const INACTIVE_SUBSCRIPTION_STATUSES: Stripe.Subscription.Status[] = [
 
 async function syncSubscriptionAccess(subscription: Stripe.Subscription) {
   const userId = subscription.metadata?.userId;
-  if (!userId) return;
+  if (!userId) {
+    console.error("[stripe:webhook] syncSubscriptionAccess: no userId in subscription metadata", {
+      subscriptionId: subscription.id,
+      metadata: subscription.metadata,
+    });
+    return;
+  }
 
   const revoke = INACTIVE_SUBSCRIPTION_STATUSES.includes(subscription.status);
+  const periodEnd = getSubscriptionPeriodEnd(subscription);
+  const accessUntil = revoke ? new Date() : periodEnd;
 
-  await prisma.user.update({
+  console.log("[stripe:webhook] syncSubscriptionAccess", {
+    userId,
+    subscriptionId: subscription.id,
+    status: subscription.status,
+    revoke,
+    itemsCount: subscription.items.data.length,
+    itemCurrentPeriodEnds: subscription.items.data.map((i) => i.current_period_end),
+    computedAccessUntil: accessUntil.toISOString(),
+    isValidDate: !Number.isNaN(accessUntil.getTime()),
+  });
+
+  const updated = await prisma.user.update({
     where: { id: userId },
     data: {
       plan: "monthly",
       stripeSubId: subscription.id,
-      accessUntil: revoke ? new Date() : getSubscriptionPeriodEnd(subscription),
+      accessUntil,
     },
+  });
+
+  console.log("[stripe:webhook] user updated", {
+    userId: updated.id,
+    accessUntil: updated.accessUntil,
+    hasLifetime: updated.hasLifetime,
   });
 }
 
 async function fulfilCheckoutSession(stripe: Stripe, checkoutSession: Stripe.Checkout.Session) {
   const userId = checkoutSession.metadata?.userId;
   const plan = checkoutSession.metadata?.plan;
-  if (!userId) return;
+
+  console.log("[stripe:webhook] fulfilCheckoutSession", {
+    checkoutSessionId: checkoutSession.id,
+    userId,
+    plan,
+    subscription: checkoutSession.subscription,
+    metadata: checkoutSession.metadata,
+  });
+
+  if (!userId) {
+    console.error("[stripe:webhook] fulfilCheckoutSession: no userId in session metadata", {
+      checkoutSessionId: checkoutSession.id,
+    });
+    return;
+  }
 
   if (plan === "onetime") {
     await prisma.user.update({
@@ -41,6 +80,12 @@ async function fulfilCheckoutSession(stripe: Stripe, checkoutSession: Stripe.Che
       checkoutSession.subscription as string
     );
     await syncSubscriptionAccess(subscription);
+  } else {
+    console.error("[stripe:webhook] fulfilCheckoutSession: no action taken", {
+      checkoutSessionId: checkoutSession.id,
+      plan,
+      hasSubscription: Boolean(checkoutSession.subscription),
+    });
   }
 }
 

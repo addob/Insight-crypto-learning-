@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getCourseDay, WEEK_TITLES } from "@/data/curriculum";
 import { glossary } from "@/data/glossary";
-import { canAccessDay, TOTAL_DAYS } from "@/lib/access";
+import { canAccessDay, hasActiveAccess, TOTAL_DAYS } from "@/lib/access";
 import { dayUrlSlug, parseDaySlug } from "@/lib/slug";
 import QuizForm from "@/components/QuizForm";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -71,6 +71,7 @@ export default async function CourseDayPage({ params }: { params: { slug: string
         day={day}
         courseDay={courseDay}
         loggedIn={Boolean(user)}
+        hasSubscription={Boolean(user) && hasActiveAccess(user!)}
         prevHref={prevHref}
         nextHref={nextHref}
       />
@@ -232,22 +233,25 @@ function DayTeaser({
   day,
   courseDay,
   loggedIn,
+  hasSubscription,
   prevHref,
   nextHref,
 }: {
   day: number;
   courseDay: NonNullable<ReturnType<typeof getCourseDay>>;
   loggedIn: boolean;
+  hasSubscription: boolean;
   prevHref: string | null;
   nextHref: string | null;
 }) {
   const isFreeDay = day <= 2;
+  const needsPreviousQuiz = loggedIn && (isFreeDay || hasSubscription);
   const cta = !loggedIn
     ? {
         href: "/signup",
         label: isFreeDay ? "Create a free account to read this lesson" : "Sign up to get started",
       }
-    : isFreeDay
+    : needsPreviousQuiz
       ? { href: `/course/${dayUrlSlug(day - 1, getCourseDay(day - 1)?.title ?? "")}`, label: `Pass Day ${day - 1}'s quiz to unlock this day` }
       : { href: "/pricing", label: "Subscribe to unlock this day" };
 
@@ -288,14 +292,22 @@ function DayTeaser({
       <div className="card mt-8 flex flex-col items-start gap-4 border-gold/50 p-6 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="font-semibold">
-            {isFreeDay
-              ? "Days 1 and 2 are free to try — no card required."
-              : "Full lesson and quiz for subscribers."}
+            {!loggedIn
+              ? isFreeDay
+                ? "Days 1 and 2 are free to try — no card required."
+                : "Full lesson and quiz for subscribers."
+              : needsPreviousQuiz
+                ? `This day unlocks once you've passed Day ${day - 1}'s quiz at 90% or higher.`
+                : "Full lesson and quiz for subscribers."}
           </p>
           <p className="mt-1 text-sm text-muted">
-            {isFreeDay
-              ? "Create a free account to read the full lesson and take the quiz."
-              : "£5/month or a one-off £50 unlocks all 60 days."}
+            {!loggedIn
+              ? isFreeDay
+                ? "Create a free account to read the full lesson and take the quiz."
+                : "£5/month or a one-off £50 unlocks all 60 days."
+              : needsPreviousQuiz
+                ? "Head back to the previous day to review the lesson and retake the quiz."
+                : "£5/month or a one-off £50 unlocks all 60 days."}
           </p>
         </div>
         <Link href={cta.href} className="btn-primary whitespace-nowrap">
